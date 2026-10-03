@@ -12,6 +12,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
+
 @Configuration
 public class DataInitializer {
 
@@ -19,7 +21,6 @@ public class DataInitializer {
     private final GroupRepository groupRepository;
     private final ProfileRepository profileRepository;
     private final PostRepository postRepository;
-
 
     public DataInitializer(
             UserRepository userRepository, GroupRepository groupRepository,
@@ -34,57 +35,67 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initializeData() {
         return args -> {
+            // 1. Create Users
             UserModel user1 = new UserModel();
+            user1.setUsername("jose.bolivar");
+
             UserModel user2 = new UserModel();
+            user2.setUsername("dev_python");
+
             UserModel user3 = new UserModel();
+            user3.setUsername("mtg_player");
 
-            userRepository.save(user1);
-            userRepository.save(user2);
-            userRepository.save(user3);
+            userRepository.saveAll(Arrays.asList(user1, user2, user3));
 
+            // 2. Create Groups and associate Users
             GroupModel group1 = new GroupModel();
+            group1.setName("Backend Developers");
+            group1.getUsers().addAll(Arrays.asList(user1, user2));
+
             GroupModel group2 = new GroupModel();
+            group2.setName("Commander Players");
+            group2.getUsers().addAll(Arrays.asList(user2, user3));
 
-            // Associating users with groups
-            group1.getUsers().add(user1);
-            group1.getUsers().add(user2);
+            groupRepository.saveAll(Arrays.asList(group1, group2));
 
-            group2.getUsers().add(user2);
-            group2.getUsers().add(user3);
+            // Update users to reflect the ManyToMany relationship
+            userRepository.saveAll(Arrays.asList(user1, user2, user3));
 
-            groupRepository.save(group1);
-            groupRepository.save(group2);
-
-            // Saving users again to update the associations
-            userRepository.save(user1);
-            userRepository.save(user2);
-            userRepository.save(user3);
-
+            // 3. Create Posts (Aqui estão as descriptions dos posts)
             PostModel post1 = new PostModel();
-            PostModel post2 = new PostModel();
-            PostModel post3 = new PostModel();
-
-            // Associating posts with users
+            post1.setDescription("Starting the architecture setup for a new Python RESTful API for an e-commerce platform!");
             post1.setUser(user1);
+
+            PostModel post2 = new PostModel();
+            post2.setDescription("Tweaking my Commander deck list. Zhulodok, Void Gorger is an absolute powerhouse.");
             post2.setUser(user2);
+
+            PostModel post3 = new PostModel();
+            post3.setDescription("Just submitted the final research paper on computational thinking to the journal.");
             post3.setUser(user3);
 
-            ProfileModel profile1 = new ProfileModel();
-            ProfileModel profile2 = new ProfileModel();
-            ProfileModel profile3 = new ProfileModel();
+            postRepository.saveAll(Arrays.asList(post1, post2, post3));
 
-            // Associating profiles with users
+            // 4. Create Profiles (Aqui estão as descriptions dos perfis)
+            ProfileModel profile1 = new ProfileModel();
+            profile1.setDescription("Computer Science graduate student and backend developer.");
             profile1.setUser(user1);
+
+            ProfileModel profile2 = new ProfileModel();
+            profile2.setDescription("Magic: The Gathering enthusiast and software architect.");
             profile2.setUser(user2);
+
+            ProfileModel profile3 = new ProfileModel();
+            profile3.setDescription("Researcher focusing on Problem-Based Learning.");
             profile3.setUser(user3);
 
-            profileRepository.save(profile1);
-            profileRepository.save(profile2);
-            profileRepository.save(profile3);
+            profileRepository.saveAll(Arrays.asList(profile1, profile2, profile3));
 
-            // FETCH TYPES
+            // 5. Fetch Test
             System.out.println("FETCHING SOCIAL USER");
-            userRepository.findById(1L);
+            userRepository.findById(1L).ifPresent(user -> {
+                System.out.println("User successfully found during initialization.");
+            });
         };
     }
 }

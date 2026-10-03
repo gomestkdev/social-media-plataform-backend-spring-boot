@@ -17,6 +17,9 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
+    private String username;
+
     @OneToOne(
             mappedBy = "user",
             cascade = {

@@ -19,6 +19,9 @@ public class GroupModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
+    private String name;
+
     @ManyToMany(mappedBy = "groups")
     @JsonIgnore
     private Set<UserModel> users = new HashSet<>();

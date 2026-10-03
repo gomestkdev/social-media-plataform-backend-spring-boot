@@ -16,6 +16,9 @@ public class PostModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserModel user;

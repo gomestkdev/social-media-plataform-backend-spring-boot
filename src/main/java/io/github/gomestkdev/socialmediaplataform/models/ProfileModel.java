@@ -19,9 +19,10 @@ public class ProfileModel {
 
     @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "user_id") // Apenas o JoinColumn aqui. Removido o mappedBy.
+    @JoinColumn(name = "user_id")
     private UserModel user;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Override
