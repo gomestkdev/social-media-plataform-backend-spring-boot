@@ -1,5 +1,6 @@
 package io.github.gomestkdev.socialmediaplataform.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,7 @@ public class ProfileModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "user_id") // Apenas o JoinColumn aqui. Removido o mappedBy.
     private UserModel user;
