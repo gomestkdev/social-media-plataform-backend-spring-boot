@@ -37,6 +37,7 @@ public class UserModel {
                     CascadeType.MERGE
             }
     )
+    @JsonIgnore
     private List<PostModel> posts = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -59,16 +60,5 @@ public class UserModel {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public void setProfile(ProfileModel profile) {
-        if (profile == null) {
-            if (this.profile != null) {
-                this.profile.setUser(null);
-            }
-        } else {
-            profile.setUser(this);
-        }
-        this.profile = profile;
     }
 }
