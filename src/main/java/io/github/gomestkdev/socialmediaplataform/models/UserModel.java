@@ -7,26 +7,36 @@ import lombok.*;
 import java.util.*;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "tb_users")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-//    @JoinColumn(name = "social_profile_id")
-    @JsonIgnore
+    @OneToOne(
+            mappedBy = "user",
+            cascade = {
+                    CascadeType.REMOVE,
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }
+    )
     private ProfileModel profile;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
+    @OneToMany(
+            mappedBy = "user",
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            }
+    )
     private List<PostModel> posts = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -37,13 +47,25 @@ public class UserModel {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserModel userModel = (UserModel) o;
-        return Objects.equals(id, userModel.id) && Objects.equals(profile, userModel.profile) && Objects.equals(posts, userModel.posts) && Objects.equals(groups, userModel.groups);
+        return id != null && Objects.equals(id, userModel.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, profile, posts, groups);
+        return getClass().hashCode();
+    }
+
+    public void setProfile(ProfileModel profile) {
+        if (profile == null) {
+            if (this.profile != null) {
+                this.profile.setUser(null);
+            }
+        } else {
+            profile.setUser(this);
+        }
+        this.profile = profile;
     }
 }

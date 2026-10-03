@@ -1,36 +1,37 @@
 package io.github.gomestkdev.socialmediaplataform.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Objects;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "tb_profiles")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProfileModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "profile")
-    @JoinColumn(name = "user")
-    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "user_id") // Apenas o JoinColumn aqui. Removido o mappedBy.
     private UserModel user;
+
+    private String description;
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProfileModel that = (ProfileModel) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user);
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user);
+        return getClass().hashCode();
     }
 }

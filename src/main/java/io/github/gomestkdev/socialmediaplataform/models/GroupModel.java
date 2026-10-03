@@ -9,11 +9,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "tb_groups")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class GroupModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +25,14 @@ public class GroupModel {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GroupModel that = (GroupModel) o;
-        return Objects.equals(id, that.id) && Objects.equals(users, that.users);
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, users);
+        return getClass().hashCode();
     }
 }

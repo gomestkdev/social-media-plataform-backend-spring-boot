@@ -17,7 +17,7 @@ public class SocialController {
     @Autowired
     private SocialService service;
 
-    @GetMapping("/users")
+    @GetMapping()
     public ResponseEntity<List<UserModel>> getUsers() {
         return new ResponseEntity<>(service.getAllUsers(), OK);
     }
@@ -25,5 +25,10 @@ public class SocialController {
     @PostMapping()
     public ResponseEntity<UserModel> saveUser(@RequestBody UserModel user) {
         return new ResponseEntity<>(service.saveUser(user), CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserModel> deleteUser(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(service.deleteUser(id), NO_CONTENT);
     }
 }

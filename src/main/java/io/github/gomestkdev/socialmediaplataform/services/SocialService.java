@@ -19,4 +19,12 @@ public class SocialService {
     public UserModel saveUser(UserModel user) {
         return repository.save(user);
     }
+
+    public UserModel deleteUser(Long id) {
+        UserModel user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException(("User not found.")));
+
+        repository.delete(user);
+        return user;
+    }
 }
